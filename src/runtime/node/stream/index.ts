@@ -1,67 +1,32 @@
-// https://nodejs.org/api/stream.html
-import type stream from "node:stream";
+// https://nodejs.org/api/nodeStream.html
+import nodeStream from "node:stream";
 import mock from "../../mock/proxy";
-import { notImplemented } from "../../_internal/utils";
+import * as utils from "./internal/utils";
 import { Readable } from "./internal/readable";
 import { Writable } from "./internal/writable";
 import { Duplex } from "./internal/duplex";
 import { Transform } from "./internal/transform";
-
 import promises from "./promises/index";
+
+export * from "./internal/utils";
 
 export { Readable } from "./internal/readable";
 export { Writable } from "./internal/writable";
 export { Duplex } from "./internal/duplex";
 export { Transform } from "./internal/transform";
 
-export const Stream: stream.Stream = mock.__createMock__("Stream");
-export const PassThrough: stream.PassThrough =
+export const Stream: nodeStream.Stream = mock.__createMock__("Stream");
+
+export const PassThrough: nodeStream.PassThrough =
   mock.__createMock__("PassThrough");
 
-export const pipeline = notImplemented<typeof stream.pipeline>(
-  "stream.pipeline",
-) as any;
-export const finished = notImplemented<typeof stream.finished>(
-  "stream.finished",
-) as any;
-export const addAbortSignal = notImplemented<typeof stream.addAbortSignal>(
-  "stream.addAbortSignal",
-);
-
-// Internal
-interface StreamInternal {
-  isDisturbed: any;
-  isReadable: any;
-  compose: any;
-  isErrored: any;
-  destroy: any;
-  _isUint8Array: any;
-  _uint8ArrayToBuffer: any;
-}
-export const isDisturbed = notImplemented("stream.isDisturbed");
-export const isReadable = notImplemented("stream.isReadable");
-export const compose = notImplemented("stream.compose");
-export const isErrored = notImplemented("stream.isErrored");
-export const destroy = notImplemented("stream.destroy");
-export const _isUint8Array = notImplemented("stream._isUint8Array");
-export const _uint8ArrayToBuffer = notImplemented("stream._uint8ArrayToBuffer");
-
-export default <typeof stream & StreamInternal>{
-  Readable: Readable as unknown as typeof stream.Readable,
-  Writable: Writable as unknown as typeof stream.Writable,
-  Duplex: Duplex as unknown as typeof stream.Duplex,
-  Transform: Transform as unknown as typeof stream.Transform,
-  Stream: Stream as unknown as typeof stream.Stream,
-  PassThrough: PassThrough as unknown as typeof stream.PassThrough,
-  pipeline,
-  finished,
-  addAbortSignal,
+export default {
+  Readable: Readable as unknown as typeof nodeStream.Readable,
+  Writable: Writable as unknown as typeof nodeStream.Writable,
+  Duplex: Duplex as unknown as typeof nodeStream.Duplex,
+  Transform: Transform as unknown as typeof nodeStream.Transform,
+  Stream: Stream as unknown as typeof nodeStream.Stream,
+  PassThrough: PassThrough as unknown as typeof nodeStream.PassThrough,
   promises,
-  isDisturbed,
-  isReadable,
-  compose,
-  _uint8ArrayToBuffer,
-  isErrored,
-  destroy,
-  _isUint8Array,
-};
+  ...utils,
+} satisfies typeof nodeStream;
