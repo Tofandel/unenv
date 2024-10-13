@@ -40,6 +40,7 @@ export function createCall(handle: Handle) {
       }
     }
     req.headers.host = req.headers.host || context.host || "localhost";
+    req.headers["content-length"] = context.body ? context.body.length : 0;
 
     // @ts-ignore
     req.connection.encrypted =
